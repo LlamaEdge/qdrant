@@ -205,12 +205,14 @@ jobs:
               tar -zcvf ../../../${{ matrix.platform.name }} qdrant
             fi
             cd -
-        - name: Publish release artifacts
-          uses: actions/upload-artifact@v3
-          with:
-            name: ubi-${{ matrix.platform.os_name }}
-            path: "ubi*"
-        #   if: github.ref == 'refs/tags/test-release'
+
+        # - name: Publish release artifacts
+        #   uses: actions/upload-artifact@v3
+        #   with:
+        #     name: Qdrant-static-${{ matrix.platform.os_name }}
+        #     path: ""
+        # #   if: github.ref == 'refs/tags/test-release'
+
         - name: Publish GitHub release
           uses: softprops/action-gh-release@v1
           with:
@@ -219,5 +221,5 @@ jobs:
             body: TODO New Release.
             draft: true
             prerelease: true
-            files: "ubi*"
+            files: "Qdrant-*"
         #   if: startsWith( github.ref, 'refs/tags/v' )
