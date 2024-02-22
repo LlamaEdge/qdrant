@@ -140,6 +140,13 @@ jobs:
             sudo apt-get install -y musl-dev musl-tools build-essential libclang-dev
           if: contains(matrix.platform.os, 'ubuntu') && !matrix.platform.cross
 
+        - name: Setup protoc
+          run: |
+            curl -LO https://github.com/protocolbuffers/protobuf/releases/download/v3.15.8/protoc-3.15.8-linux-x86_64.zip
+            unzip protoc-3.15.8-linux-x86_64.zip -d $HOME/.local
+            echo "$HOME/.local/bin" >> $GITHUB_PATH
+          if: contains(matrix.platform.os, 'ubuntu')
+
         - name: Install cross if cross-compiling (*nix)
           id: cross-nix
           shell: bash
@@ -158,6 +165,7 @@ jobs:
             .\bootstrap\bootstrap-ubi.ps1
             .\ubi --project cross-rs/cross --in .
           if: matrix.platform.cross && contains(matrix.platform.os, 'windows')
+
         # - name: Build binary (*nix)
         #   shell: bash
         #   run: |
@@ -167,10 +175,10 @@ jobs:
         - name: Build binary (Linux)
           shell: bash
           run: |
-            curl -LO https://github.com/protocolbuffers/protobuf/releases/download/v3.15.8/protoc-3.15.8-linux-x86_64.zip
-            unzip protoc-3.15.8-linux-x86_64.zip -d $HOME/.local
-            echo "$HOME/.local/bin" >> $GITHUB_PATH
-            protoc --version
+            # curl -LO https://github.com/protocolbuffers/protobuf/releases/download/v3.15.8/protoc-3.15.8-linux-x86_64.zip
+            # unzip protoc-3.15.8-linux-x86_64.zip -d $HOME/.local
+            # echo "$HOME/.local/bin" >> $GITHUB_PATH
+            # protoc --version
 
             ${{ matrix.platform.cargo_command }} build --locked --release --target ${{ matrix.platform.target }}
           if: ${{ contains(matrix.platform.os, 'ubuntu') }}
