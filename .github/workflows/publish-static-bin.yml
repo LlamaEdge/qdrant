@@ -91,13 +91,13 @@ jobs:
             #   cross: true
             #   cargo_command: ./cross
 
-            - os_name: Linux-x86_64-musl
-              os: ubuntu-20.04
-              target: x86_64-unknown-linux-musl
-              bin: ubi
-              name: ubi-Linux-x86_64-musl.tar.gz
-              cross: false
-              cargo_command: cargo
+            # - os_name: Linux-x86_64-musl
+            #   os: ubuntu-20.04
+            #   target: x86_64-unknown-linux-musl
+            #   bin: ubi
+            #   name: ubi-Linux-x86_64-musl.tar.gz
+            #   cross: false
+            #   cargo_command: cargo
 
 
             - os_name: Linux-x86_64-gnu
@@ -134,7 +134,7 @@ jobs:
             targets: ${{ matrix.platform.target }}
           if: ${{ !matrix.platform.cross }}
         - name: Install musl-tools on Linux
-          run: sudo apt-get update --yes && sudo apt-get install --yes musl-tools
+          run: sudo apt-get update --yes && sudo apt-get install --yes musl-dev musl-tools
           if: contains(matrix.platform.os, 'ubuntu') && !matrix.platform.cross
         - name: Install cross if cross-compiling (*nix)
           id: cross-nix
