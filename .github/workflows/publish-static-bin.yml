@@ -175,11 +175,6 @@ jobs:
         - name: Build binary (Linux)
           shell: bash
           run: |
-            # curl -LO https://github.com/protocolbuffers/protobuf/releases/download/v3.15.8/protoc-3.15.8-linux-x86_64.zip
-            # unzip protoc-3.15.8-linux-x86_64.zip -d $HOME/.local
-            # echo "$HOME/.local/bin" >> $GITHUB_PATH
-            # protoc --version
-
             ${{ matrix.platform.cargo_command }} build --locked --release --target ${{ matrix.platform.target }}
           if: ${{ contains(matrix.platform.os, 'ubuntu') }}
 
@@ -207,7 +202,7 @@ jobs:
             if [[ "${{ matrix.platform.os }}" == "windows-latest" ]]; then
               7z a ../../../${{ matrix.platform.name }} ${{ matrix.platform.bin }}
             else
-              tar czvf ../../../${{ matrix.platform.name }} qdrant
+              tar -zcvf ../../../${{ matrix.platform.name }} qdrant
             fi
             cd -
         - name: Publish release artifacts
