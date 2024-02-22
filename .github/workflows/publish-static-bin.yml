@@ -133,12 +133,13 @@ jobs:
           with:
             targets: ${{ matrix.platform.target }}
           if: ${{ !matrix.platform.cross }}
+
         - name: Install musl-tools on Linux
           run: |
             sudo apt-get update -y
-            sudo apt-get install -y musl-dev musl-tools build-essential libclang-dev protobuf-compiler
-            protoc --version
+            sudo apt-get install -y musl-dev musl-tools build-essential libclang-dev
           if: contains(matrix.platform.os, 'ubuntu') && !matrix.platform.cross
+
         - name: Install cross if cross-compiling (*nix)
           id: cross-nix
           shell: bash
@@ -149,6 +150,7 @@ jobs:
             ./bootstrap/bootstrap-ubi.sh
             "$HOME/bin/ubi" --project cross-rs/cross --matching musl --in .
           if: matrix.platform.cross && !contains(matrix.platform.os, 'windows')
+
         - name: Install cross if cross-compiling (Windows)
           id: cross-windows
           shell: powershell
@@ -161,11 +163,18 @@ jobs:
         #   run: |
         #     ${{ matrix.platform.cargo_command }} build --locked --release --target ${{ matrix.platform.target }}
         #   if: ${{ !contains(matrix.platform.os, 'windows') }}
+
         - name: Build binary (Linux)
           shell: bash
           run: |
+            curl -LO https://github.com/protocolbuffers/protobuf/releases/download/v3.15.8/protoc-3.15.8-linux-x86_64.zip
+            unzip protoc-3.15.8-linux-x86_64.zip -d $HOME/.local
+            echo "$HOME/.local/bin" >> $GITHUB_PATH
+            protoc --version
+
             ${{ matrix.platform.cargo_command }} build --locked --release --target ${{ matrix.platform.target }}
           if: ${{ contains(matrix.platform.os, 'ubuntu') }}
+
         - name: Build binary (Windows)
           # We have to use the platform's native shell. If we use bash on
           # Windows then OpenSSL complains that the Perl it finds doesn't use
