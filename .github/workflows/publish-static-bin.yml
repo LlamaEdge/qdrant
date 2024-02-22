@@ -161,7 +161,7 @@ jobs:
         - name: Build binary (Linux)
           shell: bash
           run: |
-            RUSTFLAGS='-C target-feature=+crt-static' ${{ matrix.platform.cargo_command }} build --locked --release --target ${{ matrix.platform.target }}
+            ${{ matrix.platform.cargo_command }} build --locked --release --target ${{ matrix.platform.target }}
           if: ${{ contains(matrix.platform.os, 'ubuntu') }}
         - name: Build binary (Windows)
           # We have to use the platform's native shell. If we use bash on
