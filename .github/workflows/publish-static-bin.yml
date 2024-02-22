@@ -191,12 +191,15 @@ jobs:
           run: |
             & ${{ matrix.platform.cargo_command }} build --locked --release --target ${{ matrix.platform.target }}
           if: contains(matrix.platform.os, 'windows')
+
         - name: Strip binary
           shell: bash
           run: |
-            strip target/${{ matrix.platform.target }}/release/${{ matrix.platform.bin }}
+            # strip target/${{ matrix.platform.target }}/release/${{ matrix.platform.bin }}
+            strip target/${{ matrix.platform.target }}/release
           # strip doesn't work with cross-arch binaries on Linux or Windows.
           if: ${{ !(matrix.platform.cross || matrix.platform.target == 'aarch64-pc-windows-msvc') }}
+
         - name: Package as archive
           shell: bash
           run: |
